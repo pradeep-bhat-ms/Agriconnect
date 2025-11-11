@@ -1,8 +1,7 @@
 <h1 align="center">🌾 AgriConnect – Reforming Agri Living 🌱</h1>  
 
 <p align="center">
-  <img src="C:\Users\prade\Downloads\Gemini_Generated_Image_5rk4ux5rk4ux5rk4.png
-" width="500" alt="AgriConnect Logo">
+  <img src="https://user-images.githubusercontent.com/yourID/yourimage.png" width="500" alt="AgriConnect Logo"><br>
 </p>
 
 ---
