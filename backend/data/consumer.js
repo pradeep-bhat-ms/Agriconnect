@@ -1,5 +1,6 @@
 const consumer = [
     {
+        _id: "40",
         prod_name: "Mini Mogra Rice",
         seller_name: "Sanjula",
         image: '/images/consumer/mogra_rice.jpg',
@@ -9,6 +10,7 @@ const consumer = [
         avalaible_location: "Mathale"
     },
     {
+        _id: "41",
         prod_name: "Red Grapes",
         seller_name: "Test",
         image: '/images/consumer/red_grapes.jpg',
@@ -18,6 +20,7 @@ const consumer = [
         avalaible_location: "Kandy"
     },
     {
+        _id: "42",
         prod_name: "Sharp Chana Dal",
         seller_name: "Silva",
         image: '/images/consumer/chana_dhal.jpg',
@@ -27,6 +30,7 @@ const consumer = [
         avalaible_location: "Panadura"
     },
     {
+        _id: "43",
         prod_name: "Gold Atta",
         seller_name: "Silva",
         image: '/images/consumer/gold_atta.jpg',
@@ -36,6 +40,7 @@ const consumer = [
         avalaible_location: "Dehiwala"
     },
     {
+        _id: "44",
         prod_name: "Wheat Sona",
         seller_name: "Alwis",
         image:'/images/consumer/sona.jpg',
@@ -45,6 +50,7 @@ const consumer = [
         avalaible_location: "Jaffna"
     },
     {
+        _id: "45",
         prod_name: "Basdmit rice",
         seller_name: "Perera",
         image:'/images/consumer/basmati_rice.jpg',

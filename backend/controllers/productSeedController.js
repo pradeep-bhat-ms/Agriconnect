@@ -1,132 +1,166 @@
-import express from 'express'
-import asyncHandler from 'express-async-handler'
+import asyncHandler from 'express-async-handler';
+import mongoose from 'mongoose';
+import ProductSeed from './../models/productSeedModel.js';
 
-import ProductSeeds from './../models/productSeedModel.js';
+const noStore = (res) =>
+  res.set({ 'Cache-Control': 'no-store', 'Pragma': 'no-cache', 'Expires': '0' });
 
-// @desc    Fetch all products
-// @rout    GET /seeds
-// @access  public
+// @desc    Fetch all seeds
+// @route   GET /api/seeds
+// @access  Public
 const getSeedProducts = asyncHandler(async (req, res) => {
-    const productSeed = await ProductSeeds.find({})
-    res.json(productSeed);
-})
+  const productSeed = await ProductSeed.find({});
+  noStore(res);
+  return res.status(200).json(productSeed);
+});
 
-// @desc    Fetch product by id
-// @rout    GET /seeds/:id
-// @access  public
+// @desc    Fetch seed by id
+// @route   GET /api/seeds/:id
+// @access  Public
 const getSeedProductById = asyncHandler(async (req, res) => {
-    const productSeed = await ProductSeeds.findById(req.params.id);
+  const { id } = req.params;
 
-    if (productSeed) {
-        res.json(productSeed);
-    } else {
-        res.status(404)
-        throw new Error('Seed not Found')
-    }
-})
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    noStore(res);
+    return res.status(400).json({ message: 'Invalid seed id' });
+  }
 
-// @desc    Delete Seed
-// @rout    DELETE /seeds/:id
-// @access  private/ Admin
+  const productSeed = await ProductSeed.findById(id);
+  if (!productSeed) {
+    noStore(res);
+    return res.status(404).json({ message: 'Seed not found' });
+  }
+
+  noStore(res);
+  return res.status(200).json(productSeed);
+});
+
+// @desc    Delete seed
+// @route   DELETE /api/seeds/:id
+// @access  Private/Admin
 const deleteSeedProduct = asyncHandler(async (req, res) => {
-    const productSeed = await ProductSeeds.findById(req.params.id);
+  const { id } = req.params;
 
-    if (productSeed) {
-        productSeed.remove()
-        res.json({ message: "Product removed" });
-    } else {
-        res.status(404)
-        throw new Error('Seed not Found')
-    }
-})
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    noStore(res);
+    return res.status(400).json({ message: 'Invalid seed id' });
+  }
 
-// @desc    Create Product Seed
-// @rout    POST /seeds/
-// @access  private/ Admin
+  const productSeed = await ProductSeed.findById(id);
+  if (!productSeed) {
+    noStore(res);
+    return res.status(404).json({ message: 'Seed not found' });
+  }
+
+  await productSeed.deleteOne();
+  noStore(res);
+  return res.status(200).json({ message: 'Product removed' });
+});
+
+// @desc    Create seed
+// @route   POST /api/seeds
+// @access  Private/Admin
 const createSeedProduct = asyncHandler(async (req, res) => {
-    const productSeed = new ProductSeeds({
-        name: 'Sample Seed',
-        user: req.user._id,
-        image: '/images/sample.png',
-        description: 'Sample Description',
-        category: 'Sample Category',
-        price: 0,
-        countInStock: 0,
-        numReviews: 0
-    })
+  const productSeed = new ProductSeed({
+    name: 'Sample Seed',
+    user: req.user?._id, // safe if auth not wired yet
+    image: '/images/sample.png',
+    description: 'Sample Description',
+    category: 'Sample Category',
+    price: 0,
+    countInStock: 0,
+    numReviews: 0,
+  });
 
-    const createdProduct = await productSeed.save()
-    res.status(201).json(createdProduct)
-})
+  const createdProduct = await productSeed.save();
+  noStore(res);
+  return res.status(201).json(createdProduct);
+});
 
-// @desc    Update Product Seed
-// @rout    PUT /seeds/:id
-// @access  private/ Admin
+// @desc    Update seed
+// @route   PUT /api/seeds/:id
+// @access  Private/Admin
 const updateSeedProduct = asyncHandler(async (req, res) => {
-    const { name, price, image, description, category, countInStock } = req.body
+  const { id } = req.params;
+  const { name, price, image, description, category, countInStock } = req.body;
 
-    const updateProductSeed = await ProductSeeds.findById(req.params.id)
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    noStore(res);
+    return res.status(400).json({ message: 'Invalid seed id' });
+  }
 
-    if (updateProductSeed) {
+  const doc = await ProductSeed.findById(id);
+  if (!doc) {
+    noStore(res);
+    return res.status(404).json({ message: 'Product not found' });
+  }
 
-        updateProductSeed.name = name
-        updateProductSeed.price = price
-        updateProductSeed.image = image
-        updateProductSeed.description = description
-        updateProductSeed.category = category
-        updateProductSeed.countInStock = countInStock
+  doc.name = name ?? doc.name;
+  doc.price = price ?? doc.price;
+  doc.image = image ?? doc.image;
+  doc.description = description ?? doc.description;
+  doc.category = category ?? doc.category;
+  doc.countInStock = countInStock ?? doc.countInStock;
 
-        const updatedProduct = await updateProductSeed.save()
-        res.status(201).json(updatedProduct)
-    } else {
-        res.status(401)
-        throw new Error('Product not found')
-    }
-})
+  const updated = await doc.save();
+  noStore(res);
+  return res.status(200).json(updated);
+});
 
-// @desc    Update Product Review
-// @rout    POST /seeds/:id/review
-// @access  private/ Admin
+// @desc    Create seed review
+// @route   POST /api/seeds/:id/reviews
+// @access  Private
 const createSeedProductReview = asyncHandler(async (req, res) => {
-    const { rating, comment } = req.body
+  const { id } = req.params;
+  const { rating, comment } = req.body;
 
-    const productSeed = await ProductSeeds.findById(req.params.id)
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    noStore(res);
+    return res.status(400).json({ message: 'Invalid seed id' });
+  }
 
-    if (productSeed) {
-        const alreadyReviewed = productSeed.reviews.find(r => r.user.toString() === req.user._id.toString())
-        if (alreadyReviewed) {
-            res.status(400)
-            throw new Error('Product already reviewed')
-        }
+  const productSeed = await ProductSeed.findById(id);
+  if (!productSeed) {
+    noStore(res);
+    return res.status(404).json({ message: 'Product not found' });
+  }
 
-        const review = {
-            name: req.user.name,
-            rating: Number(rating),
-            comment,
-            user: req.user._id
-        }
-
-        productSeed.reviews.push(review)
-
-        productSeed.numReviews = productSeed.reviews.length
-
-        productSeed.rating = productSeed.reviews.reduce((acc, item) => item.rating + acc, 0) / productSeed.reviews.length
-
-        await productSeed.save()
-        
-        res.status(201).json({ message: 'Review added' })
-
-    } else {
-        res.status(401)
-        throw new Error('Product not found')
+  // one-per-user if auth exists
+  if (req.user?._id) {
+    const already = productSeed.reviews?.find(
+      (r) => r.user?.toString?.() === req.user._id.toString()
+    );
+    if (already) {
+      noStore(res);
+      return res.status(400).json({ message: 'Product already reviewed' });
     }
-})
+  }
+
+  const review = {
+    name: req.user?.name || 'Anonymous User',
+    rating: Number(rating) || 0,
+    comment: comment || '',
+    user: req.user?._id,
+    createdAt: new Date(),
+  };
+
+  if (!Array.isArray(productSeed.reviews)) productSeed.reviews = [];
+  productSeed.reviews.push(review);
+  productSeed.numReviews = productSeed.reviews.length;
+  productSeed.rating =
+    productSeed.reviews.reduce((acc, item) => item.rating + acc, 0) /
+    productSeed.reviews.length;
+
+  await productSeed.save();
+  noStore(res);
+  return res.status(201).json({ message: 'Review added', review });
+});
 
 export {
-    getSeedProducts,
-    getSeedProductById,
-    deleteSeedProduct,
-    createSeedProduct,
-    updateSeedProduct,
-    createSeedProductReview
-}
+  getSeedProducts,
+  getSeedProductById,
+  deleteSeedProduct,
+  createSeedProduct,
+  updateSeedProduct,
+  createSeedProductReview,
+};

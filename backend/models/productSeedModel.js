@@ -1,73 +1,80 @@
-import mongoose from 'mongoose'
+import mongoose from 'mongoose';
 
-const seedReviewSchema = mongoose.Schema({
+const seedReviewSchema = mongoose.Schema(
+  {
     name: {
-        type: String,
-        requried: true,
+      type: String,
+      required: true,
     },
     rating: {
-        type: Number,
-        requried: true,
+      type: Number,
+      required: true,
     },
     comment: {
-        type: String,
-        requried: true,
+      type: String,
+      required: true,
     },
     user: {
-        type: mongoose.Schema.Types.ObjectId,
-        required: true,
-        ref: 'User'
+      type: mongoose.Schema.Types.ObjectId,
+      required: true,
+      ref: 'User',
     },
-}, {
-    timestamps: true
-})
+  },
+  {
+    timestamps: true,
+  }
+);
 
-const productSeedSchema = mongoose.Schema({
+const productSeedSchema = mongoose.Schema(
+  {
     user: {
-        type: mongoose.Schema.Types.ObjectId,
-        required: true,
-        ref: 'User'
+      type: mongoose.Schema.Types.ObjectId,
+      required: true,
+      ref: 'User',
     },
     name: {
-        type: String,
-        required: true
+      type: String,
+      required: true,
     },
     image: {
-        type: String,
-        required: true
+      type: String,
+      required: true,
     },
     description: {
-        type: String,
-        required: true,
+      type: String,
+      required: true,
     },
     category: {
-        type: String,
-        required: true
+      type: String,
+      required: true,
     },
     reviews: [seedReviewSchema],
     rating: {
-        type: Number,
-        required: true,
-        default: 0
+      type: Number,
+      required: true,
+      default: 0,
     },
     countInStock: {
-        type: Number,
-        required: true,
-        default: 0
+      type: Number,
+      required: true,
+      default: 0,
     },
     price: {
-        type: Number,
-        required: true,
-        default: 0
+      type: Number,
+      required: true,
+      default: 0,
     },
     numReviews: {
-        type: Number,
-        default: 0
+      type: Number,
+      default: 0,
     },
-}, {
-    timestamps: true
-})
+  },
+  {
+    timestamps: true,
+  }
+);
 
-const farmer_product_seeds = mongoose.model('farmer_product_seeds', productSeedSchema);
+// collection name 'farmer_product_seeds' (model name singular/plural handled by Mongoose)
+const ProductSeed = mongoose.model('farmer_product_seeds', productSeedSchema);
 
-export default farmer_product_seeds;
+export default ProductSeed;

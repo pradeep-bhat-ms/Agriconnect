@@ -1,65 +1,57 @@
-import express from 'express'
-const router = express.Router()
+// routes/productRoutes.js
+import express from 'express';
+import { protect, admin } from './../middleware/authMiddleware.js';
 
 import {
-    getSeedProducts,
-    getSeedProductById,
-    deleteSeedProduct,
-    createSeedProduct,
-    updateSeedProduct,
-    createSeedProductReview
-} from './../controllers/productSeedController.js'
+  getSeedProducts,
+  getSeedProductById,
+  deleteSeedProduct,
+  createSeedProduct,
+  updateSeedProduct,
+  createSeedProductReview,
+} from './../controllers/productSeedController.js';
+
 import {
-    getLendMachnines,
-    getLendMachnineById,
-    deleteLendMachnine,
-    updateLendMachine,
-    createLendMachine
-} from './../controllers/productLendMachineController.js'
+  getLendMachines,
+  getLendMachineById,
+  deleteLendMachine,
+  updateLendMachine,
+  createLendMachine,
+} from './../controllers/productLendMachineController.js';
+
 import {
-    getConsumerProducts,
-    getConsumerProductById,
-    deleteConsumerProduct,
-    createConsumer,
-    updateConsumer
-} from './../controllers/consumerProductControlller.js'
-import { protect, admin } from './../middleware/authMiddleware.js'
+  getConsumerProducts,
+  getConsumerProductById,
+  deleteConsumerProduct,
+  createConsumer,
+  updateConsumer,
+} from './../controllers/consumerProductController.js';
 
+const router = express.Router();
+
+// Seeds
+router.route('/seeds').get(getSeedProducts).post(protect, admin, createSeedProduct);
+router.route('/seeds/:id/reviews').post(protect, createSeedProductReview);
 router
-    .route('/seeds')
-    .get(getSeedProducts)
-    .post(protect, admin, createSeedProduct)
+  .route('/seeds/:id')
+  .get(getSeedProductById)
+  .delete(protect, admin, deleteSeedProduct)
+  .put(protect, admin, updateSeedProduct);
 
+// Lend Machines
+router.route('/lendMachines').get(getLendMachines).post(protect, admin, createLendMachine);
 router
-    .route('/seeds/:id/reviews')
-    .post(protect, createSeedProductReview)
+  .route('/lendMachines/:id')
+  .get(getLendMachineById)
+  .delete(protect, admin, deleteLendMachine)
+  .put(protect, admin, updateLendMachine);
 
+// Consumer
+router.route('/consumer').get(getConsumerProducts).post(protect, admin, createConsumer);
 router
-    .route('/seeds/:id')
-    .get(getSeedProductById)
-    .delete(protect, admin, deleteSeedProduct)
-    .put(protect, admin, updateSeedProduct)
+  .route('/consumer/:id')
+  .get(getConsumerProductById)
+  .delete(protect, admin, deleteConsumerProduct)
+  .put(protect, admin, updateConsumer);
 
-router
-    .route('/lendMachines')
-    .get(getLendMachnines)
-    .post(protect, admin, createLendMachine)
-
-router
-    .route('/lendMachines/:id')
-    .get(getLendMachnineById)
-    .delete(protect, admin, deleteLendMachnine)
-    .put(protect, admin, updateLendMachine)
-
-router
-    .route('/consumer')
-    .get(getConsumerProducts)
-    .post(protect, admin, createConsumer)
-
-router
-    .route('/consumer/:id')
-    .get(getConsumerProductById)
-    .delete(protect, admin, deleteConsumerProduct)
-    .put(protect, admin, updateConsumer)
-
-export default router
+export default router;

@@ -1,94 +1,74 @@
-import express from 'express'
 import asyncHandler from 'express-async-handler'
+import mongoose from 'mongoose'
+import ProductLendMachines from '../models/productLendMachineModel.js'
 
-import ProductLendMachines from './../models/productLendMachineModel.js';
-
-// @desc    Fetch all lending Machines
-// @rout    GET /lendMachines
-// @access  public
-const getLendMachnines = asyncHandler(async(req, res) => {
-    const productLendMachine = await ProductLendMachines.find({})
-    res.json(productLendMachine);
+// GET /api/lendMachines
+export const getLendMachines = asyncHandler(async (_req, res) => {
+  const machines = await ProductLendMachines.find({})
+  res.json(machines)
 })
 
-// @desc    Fetch machine by id
-// @rout    GET /lendMachines/:id
-// @access  public
-const getLendMachnineById = asyncHandler(async(req, res) => {
-    const productLendMachine = await ProductLendMachines.findById(req.params.id);
+// GET /api/lendMachines/:id
+export const getLendMachineById = asyncHandler(async (req, res) => {
+  const { id } = req.params
+  if (!mongoose.isValidObjectId(id)) {
+    return res.status(400).json({ message: 'Invalid machine id' })
+  }
 
-    if(productLendMachine) {
-        res.json(productLendMachine);
-    } else {
-        res.status(404)
-        throw new Error('Machine not Found')
-    }
+  const machine = await ProductLendMachines.findById(id)
+  if (!machine) return res.status(404).json({ message: 'Machine not found' })
+  res.json(machine)
 })
 
-// @desc    Fetch machine by id
-// @rout    GET /lendMachines/:id
-// @access  private/admin
-const deleteLendMachnine = asyncHandler(async(req, res) => {
-    const lendMachine = await ProductLendMachines.findById(req.params.id);
+// DELETE /api/lendMachines/:id
+export const deleteLendMachine = asyncHandler(async (req, res) => {
+  const { id } = req.params
+  if (!mongoose.isValidObjectId(id)) {
+    return res.status(400).json({ message: 'Invalid machine id' })
+  }
 
-    if(lendMachine) {
-        lendMachine.remove()
-        res.json({ message: 'Machine Removed' });
-    } else {
-        res.status(404)
-        throw new Error('Machine not Found')
-    }
+  const machine = await ProductLendMachines.findById(id)
+  if (!machine) return res.status(404).json({ message: 'Machine not found' })
+
+  await machine.deleteOne()
+  res.json({ message: 'Machine removed' })
 })
 
-// @desc    Create Lend Machine
-// @rout    POST /lendMachines/
-// @access  private/ Admin
-const createLendMachine = asyncHandler(async (req, res) => {
-    const lendMachine = new ProductLendMachines({
-        name: 'sample machine',
-        user: req.user._id,
-        image: '/images/farmMachine.jpg',
-        description: 'sample description',
-        target_plant: 'sample category',
-        price: 0,
-        quantity: 0,
-        machine_power: '0HP',
-    })
-
-    const createdLendMachine = await lendMachine.save()
-    res.status(201).json(createdLendMachine)
+// POST /api/lendMachines
+export const createLendMachine = asyncHandler(async (req, res) => {
+  const machine = new ProductLendMachines({
+    name: 'Sample Machine',
+    user: req.user?._id,
+    image: '/images/farmMachine.jpg',
+    description: 'Sample description',
+    target_plant: 'Sample plant',
+    price: 0,
+    quantity: 0,
+    machine_power: '0HP',
+  })
+  const created = await machine.save()
+  res.status(201).json(created)
 })
 
-// @desc    Update Lend Machine
-// @rout    PUT /lendMachines/:id
-// @access  private/ Admin
-const updateLendMachine = asyncHandler(async (req, res) => {
-    const { name, price, image, description, target_plant, quantity, machine_power } = req.body
+// PUT /api/lendMachines/:id
+export const updateLendMachine = asyncHandler(async (req, res) => {
+  const { id } = req.params
+  if (!mongoose.isValidObjectId(id)) {
+    return res.status(400).json({ message: 'Invalid machine id' })
+  }
 
-    const updateLendMachine = await ProductLendMachines.findById(req.params.id)
+  const machine = await ProductLendMachines.findById(id)
+  if (!machine) return res.status(404).json({ message: 'Machine not found' })
 
-    if (updateLendMachine) {
+  const { name, price, image, description, target_plant, quantity, machine_power } = req.body
+  machine.name = name ?? machine.name
+  machine.price = price ?? machine.price
+  machine.image = image ?? machine.image
+  machine.description = description ?? machine.description
+  machine.target_plant = target_plant ?? machine.target_plant
+  machine.quantity = quantity ?? machine.quantity
+  machine.machine_power = machine_power ?? machine.machine_power
 
-        updateLendMachine.name = name
-        updateLendMachine.price = price
-        updateLendMachine.image = image
-        updateLendMachine.description = description
-        updateLendMachine.target_plant = target_plant
-        updateLendMachine.quantity = quantity
-        updateLendMachine.machine_power = machine_power
-
-        const updatedMachine = await updateLendMachine.save()
-        res.status(201).json(updatedMachine)
-    } else {
-        res.status(401)
-        throw new Error('Product not found')
-    }
+  const updated = await machine.save()
+  res.json(updated)
 })
-
-export { 
-    getLendMachnines, 
-    getLendMachnineById, 
-    deleteLendMachnine,
-    createLendMachine,
-    updateLendMachine
-}

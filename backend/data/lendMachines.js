@@ -1,5 +1,6 @@
 const lendMachines = [
     {
+        _id: "21",
         name: 'Combine Harvester',
         image: '/images/machines/combine.jpg',
         description: 'The modern combine harvester, or simply combine, is a versatile machine designed to efficiently harvest a variety of grain crops.',
@@ -9,6 +10,7 @@ const lendMachines = [
         machine_power: '100HP',
     },
     {
+        _id: "22",
         name: 'Compact Tractor',
         image: '/images/machines/compact.jpg',
         description: 'Small tractor designed for landscaping and estate management',
@@ -18,6 +20,7 @@ const lendMachines = [
         machine_power: '40HP',
     },
     {
+        _id: "23",
         name: 'Cornplot Tractor',
         image: '/images/machines/cornplot.jpg',
         description: 'The modern combine harvester, or simply combine, is a versatile machine designed to efficiently harvest a variety of grain crops.',
@@ -27,6 +30,7 @@ const lendMachines = [
         machine_power: '80HP',
     },
     {
+        _id: "24",
         name: 'Cotton Stripper',
         image: '/images/machines/cottonstripper.png',
         description: 'The cotton stripper is a machine that harvests cotton in a way that reduces harvest time and maximizes efficiency.',
@@ -36,6 +40,7 @@ const lendMachines = [
         machine_power: '200HP',
     },
     {
+        _id: "25",
         name: 'Four-wheel-Drive Tractor',
         image: '/images/machines/fourwheel.jpg',
         description: 'Large and high horsepower tractors for most demanding tasks for large farms',
@@ -45,6 +50,7 @@ const lendMachines = [
         machine_power: '550HP',
     },
     {
+        _id: "26",
         name: 'Row-crop Tractor',
         image: '/images/machines/rowcrop.jpg',
         description: 'Designed for growing / cultivating row crops',
@@ -54,6 +60,7 @@ const lendMachines = [
         machine_power: '350HP',
     },
     {
+        _id: "27",
         name: 'Self Propelled Tractor',
         image: '/images/machines/selfpropled.jpg',
         description: 'Harvest plants to make silage for livestock feed',
@@ -63,6 +70,7 @@ const lendMachines = [
         machine_power: '100HP',
     },
     {
+        _id: "28",
         name: 'Silage Tractor',
         image: '/images/machines/silage.png',
         description: 'Harvest plants to make silage for livestock feed',
@@ -72,6 +80,7 @@ const lendMachines = [
         machine_power: '120HP',
     },
     {
+        _id: "29",
         name: 'Sugarcrane Harvester',
         image: '/images/machines/sugarcrane.jpg',
         description: 'Cut cane at the base of the stalk, stripe the leaves and chops it into consistent length',
@@ -81,6 +90,7 @@ const lendMachines = [
         machine_power: '450HP',
     },
     {
+        _id: "30",
         name: 'Utility Tractor',
         image: '/images/machines/utility.jpg',
         description: 'Common on livestock farms, not commonly used to grow crops',

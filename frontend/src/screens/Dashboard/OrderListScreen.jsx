@@ -8,7 +8,7 @@ const OrderListScreen = () => {
     return (
         <div style={{ marginTop: "110px" }}>
             <Meta
-                title="Agroic | Admin Orders"
+                title="AgriConnect | Admin Orders"
             />
             <Container fluid>
                 <Row>

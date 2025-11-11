@@ -33,7 +33,7 @@ const PaymentScreen = ({ history }) => {
         <div style={{ marginTop: '100px' }}>
             <FormContainer>
                 <Meta
-                    title="Agroic | Payment"
+                    title="AgriConnect | Payment"
                 />
                 <CheckoutSteps step1 step2 step3 />
                 <h1>Payment Method</h1>
@@ -57,6 +57,24 @@ const PaymentScreen = ({ history }) => {
                                 id='Stripe'
                                 name='paymentMethod'
                                 value='Stripe'
+                                checked
+                                onChange={(e) => setPaymentMethod(e.target.value)}
+                            ></Form.Check>
+                             <Form.Check
+                                type='radio'
+                                label='COD'
+                                id='COD'
+                                name='paymentMethod'
+                                value='COD'
+                                checked
+                                onChange={(e) => setPaymentMethod(e.target.value)}
+                            ></Form.Check>
+                             <Form.Check
+                                type='radio'
+                                label='UPI'
+                                id='UPI'
+                                name='paymentMethod'
+                                value='UPI'
                                 checked
                                 onChange={(e) => setPaymentMethod(e.target.value)}
                             ></Form.Check>

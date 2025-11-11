@@ -1,187 +1,174 @@
-import React, { useState, useEffect } from 'react'
-import axios from 'axios'
-import {
-    Form,
-    Button,
-    Container,
-    Row,
-    Col
-} from 'react-bootstrap'
-import { Link, useHistory } from 'react-router-dom'
+import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import Message from './../../../components/Message/Message'
-import Loader from './../../../components/Loader/Loader'
-import FormContainer from './../../../components/FormContainer/FormContainer'
-import { listSeedProductsDetails, updateSeedProducts } from './../../../actions/productSeedActions'
-import { SEED_UPDATE_RESET } from '../../../constants/productConstants'
+import { Link, useParams, useHistory } from 'react-router-dom'
+
+import Message from '../../../components/Message/Message'
+import Loader from '../../../components/Loader/Loader'
+import FormContainer from '../../../components/FormContainer/FormContainer'
 import Meta from '../../../components/Helmet/Meta'
 
-const SeedListEdit = ({ match }) => {
+import {
+  listSeedProductsDetails, // your action name
+  updateSeedProducts,      // your action name
+} from '../../../actions/productSeedActions'
+import { SEED_UPDATE_RESET } from '../../../constants/productConstants'
 
-    const [name, setName] = useState('')
-    const [image, setImage] = useState('')
-    const [description, setDescription] = useState('')
-    const [price, setPrice] = useState('')
-    const [category, setCategory] = useState('')
-    const [countInStock, setCountInStock] = useState(0)
-    const [uploading, setUploading] = useState(false)
+const SeedListEdit = () => {
+  const { id: productId } = useParams()
+  const history = useHistory()
+  const dispatch = useDispatch()
 
-    const productId = match.params.id
+  // 🔐 require admin
+  const { userInfo } = useSelector((state) => state.userLogin || {})
+  useEffect(() => {
+    if (!userInfo || !userInfo.isAdmin) history.push('/login')
+  }, [history, userInfo])
 
-    const dispatch = useDispatch()
-    let history = useHistory()
+  const [name, setName] = useState('')
+  const [price, setPrice] = useState(0)
+  const [image, setImage] = useState('')
+  const [category, setCategory] = useState('')
+  const [countInStock, setCountInStock] = useState(0)
+  const [description, setDescription] = useState('')
 
-    const prodcutSeedDetails = useSelector(state => state.prodcutSeedDetails)
-    const { loading, productSeed, error } = prodcutSeedDetails
+  // details slice: productSeedDetails
+  const {
+    loading = false,
+    error = null,
+    product = {},
+  } = useSelector((state) => state.productSeedDetails || {})
 
-    const seedUpdate = useSelector(state => state.seedUpdate)
-    const { loading: loadingUpdate, success: successUpdate, error: errorUpdate } = seedUpdate
+  // update slice: seedUpdate
+  const {
+    loading: loadingUpdate = false,
+    error: errorUpdate = null,
+    success: successUpdate = false,
+  } = useSelector((state) => state.seedUpdate || {})
 
-    useEffect(() => {
-        if (successUpdate) {
-            dispatch({ type: SEED_UPDATE_RESET })
-            history.push('/admin/productlist')
-        } else {
-            if (!productSeed.name || productSeed._id !== productId) {
-                dispatch(listSeedProductsDetails(productId))
-            } else {
-                setName(productSeed.name)
-                setDescription(productSeed.description)
-                setPrice(productSeed.price)
-                setCategory(productSeed.category)
-                setImage(productSeed.image)
-                setCountInStock(productSeed.countInStock)
-            }
-        }
-    }, [history, productSeed, dispatch, productId, successUpdate])
-
-    const submitHandler = (e) => {
-        e.preventDefault()
-        dispatch(updateSeedProducts({
-            _id: productId,
-            name,
-            image,
-            description,
-            category,
-            price,
-            countInStock
-        }))
+  useEffect(() => {
+    if (successUpdate) {
+      dispatch({ type: SEED_UPDATE_RESET })
+      history.push('/admin/productlist')
+      return
     }
 
-    const uploadFileHandler = async (e) => {
-        const file = e.target.files[0]
-        const formData = new FormData()
-        formData.append('image', file)
-        setUploading(true)
-
-        try {
-            const config = {
-                headers: {
-                    'Content-type': 'multipart/form-data'
-                }
-            }
-
-            const { data } = await axios.post('/api/upload', formData, config)
-
-            setImage(data)
-            setUploading(false)
-
-        } catch (error) {
-            console.error(error)
-            setUploading(false)
-        }
+    if (!product._id || product._id !== productId) {
+      dispatch(listSeedProductsDetails(productId))
+    } else {
+      setName(product.name || '')
+      setPrice(product.price || 0)
+      setImage(product.image || '')
+      setCategory(product.category || '')
+      setCountInStock(product.countInStock || 0)
+      setDescription(product.description || '')
     }
+  }, [dispatch, history, productId, product, successUpdate])
 
-    return (
-        <Container style={{ marginBottom: '50px' }}>
-            <Meta
-                title="Agroic | Admin Seed Edit"
-            />
-            <FormContainer>
-                <h2 style={{ marginTop: '120px', textAlign: 'center' }}>Seed Profile</h2>
-                <Link to='/admin/productlist' className='btn btn-light my-3'>
-                    GO BACK
-                </Link>
-                {loading && <Loader />}
-                {error && <Message variant='danger'>{error}</Message>}
-                {loadingUpdate && <Loader />}
-                {errorUpdate && <Message variant='danger'>{errorUpdate}</Message>}
-                {successUpdate && <Message variant='success'>Profile Updated!</Message>}
-                <Form onSubmit={submitHandler}>
-                    <Row>
-                        <Col md={6}>
-                            <Form.Group controlId='name'>
-                                <Form.Label>Name</Form.Label>
-                                <Form.Control
-                                    type="name"
-                                    placeholder="Enter name"
-                                    value={name}
-                                    onChange={(e) => setName(e.target.value)}
-                                ></Form.Control>
-                            </Form.Group>
-                            <Form.Group controlId='image'>
-                                <Form.Label>Image</Form.Label>
-                                <Form.Control
-                                    type="text"
-                                    placeholder="Enter image url"
-                                    value={image}
-                                    onChange={(e) => setImage(e.target.value)}
-                                ></Form.Control>
-                                <Form.File
-                                    id='image-file'
-                                    label='Choose File'
-                                    custom
-                                    onChange={uploadFileHandler}
-                                ></Form.File>
-                                {uploading && <Loader />}
-                            </Form.Group>
-                            <Form.Group controlId='description'>
-                                <Form.Label>Description</Form.Label>
-                                <Form.Control
-                                    as="textarea"
-                                    rows={3}
-                                    type="description"
-                                    placeholder="Enter description"
-                                    value={description}
-                                    onChange={(e) => setDescription(e.target.value)}
-                                ></Form.Control>
-                            </Form.Group>
-                        </Col>
-                        <Col md={6}>
-                            <Form.Group controlId='category'>
-                                <Form.Label>Category</Form.Label>
-                                <Form.Control
-                                    type="category"
-                                    placeholder="Enter price"
-                                    value={category}
-                                    onChange={(e) => setCategory(e.target.value)}
-                                ></Form.Control>
-                            </Form.Group>
-                            <Form.Group controlId='price'>
-                                <Form.Label>Price</Form.Label>
-                                <Form.Control
-                                    type="price"
-                                    placeholder="Enter price"
-                                    value={price}
-                                    onChange={(e) => setPrice(e.target.value)}
-                                ></Form.Control>
-                            </Form.Group>
-                            <Form.Group controlId='countInStock'>
-                                <Form.Label>Count in stock</Form.Label>
-                                <Form.Control
-                                    type="countInStock"
-                                    placeholder="Enter count in stock"
-                                    value={countInStock}
-                                    onChange={(e) => setCountInStock(e.target.value)}
-                                ></Form.Control>
-                            </Form.Group>
-                            <Button type="submit" variant="primary">Update</Button>
-                        </Col>
-                    </Row>
-                </Form>
-            </FormContainer>
-        </Container>
+  const submitHandler = (e) => {
+    e.preventDefault()
+    dispatch(
+      updateSeedProducts({
+        _id: productId,
+        name,
+        price,
+        image,
+        category,
+        countInStock,
+        description,
+      })
     )
+  }
+
+  return (
+    <>
+      <Meta title="Edit Seed | Admin" />
+      <Link to="/admin/seeds" className="btn btn-light btn-sm">
+        Go Back
+      </Link>
+
+      <FormContainer>
+        <h1>Edit Seed</h1>
+
+        {loadingUpdate && <Loader />}
+        {errorUpdate && <Message variant="danger">{errorUpdate}</Message>}
+
+        {loading ? (
+          <Loader />
+        ) : error ? (
+          <Message variant="danger">{error}</Message>
+        ) : (
+          <form onSubmit={submitHandler}>
+            <div className="form-group my-2">
+              <label htmlFor="name">Name</label>
+              <input
+                id="name"
+                className="form-control"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+              />
+            </div>
+
+            <div className="form-group my-2">
+              <label htmlFor="price">Price</label>
+              <input
+                id="price"
+                type="number"
+                className="form-control"
+                value={price}
+                onChange={(e) => setPrice(Number(e.target.value))}
+              />
+            </div>
+
+            <div className="form-group my-2">
+              <label htmlFor="image">Image</label>
+              <input
+                id="image"
+                className="form-control"
+                value={image}
+                onChange={(e) => setImage(e.target.value)}
+              />
+            </div>
+
+            <div className="form-group my-2">
+              <label htmlFor="category">Category</label>
+              <input
+                id="category"
+                className="form-control"
+                value={category}
+                onChange={(e) => setCategory(e.target.value)}
+              />
+            </div>
+
+            <div className="form-group my-2">
+              <label htmlFor="countInStock">Count In Stock</label>
+              <input
+                id="countInStock"
+                type="number"
+                className="form-control"
+                value={countInStock}
+                onChange={(e) => setCountInStock(Number(e.target.value))}
+              />
+            </div>
+
+            <div className="form-group my-2">
+              <label htmlFor="description">Description</label>
+              <textarea
+                id="description"
+                className="form-control"
+                rows="3"
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+              />
+            </div>
+
+            <button type="submit" className="btn btn-primary mt-3">
+              Update
+            </button>
+          </form>
+        )}
+      </FormContainer>
+    </>
+  )
 }
 
-export default SeedListEdit 
+export default SeedListEdit

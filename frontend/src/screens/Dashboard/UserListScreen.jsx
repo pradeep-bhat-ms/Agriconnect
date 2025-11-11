@@ -8,7 +8,7 @@ const UserListScreen = () => {
     return (
         <div style={{ marginTop: "110px" }}>
             <Meta
-                title="Agroic | Admin Users"
+                title="AgriConnect | Admin Users"
             />
             <Container fluid>
                 <Row>

@@ -1,124 +1,136 @@
 import React, { useEffect } from 'react'
-import { LinkContainer } from 'react-router-bootstrap'
-import {
-    Table,
-    Button,
-    Row,
-    Col,
-    Container
-} from 'react-bootstrap'
-import { useHistory } from "react-router-dom"
 import { useDispatch, useSelector } from 'react-redux'
-import Message from './../../../../components/Message/Message'
-import Loader from './../../../../components/Loader/Loader'
-import { listSeedProducts, deleteSeedProducts, createSeedProducts } from './../../../../actions/productSeedActions'
-import { SEED_CREATE_RESET } from './../../../../constants/productConstants'
+import { Link, useHistory } from 'react-router-dom'
+
+import Message from '../../../Message/Message'
+import Loader from '../../../Loader/Loader'
+import FormContainer from '../../../FormContainer/FormContainer'
+import Meta from '../../../Helmet/Meta'
+
+// use your actual folders (NOT Redux/*)
+import {
+  listSeedProducts,
+  deleteSeedProducts,
+  createSeedProducts,
+} from '../../../../actions/productSeedActions'
+import { SEED_CREATE_RESET } from '../../../../constants/productConstants'
 
 const SeedList = () => {
+  const dispatch = useDispatch()
+  const history = useHistory()
 
-    const dispatch = useDispatch()
-    let history = useHistory()
+  // 🔐 require admin
+  const { userInfo } = useSelector((state) => state.userLogin || {})
+  useEffect(() => {
+    if (!userInfo || !userInfo.isAdmin) history.push('/login')
+  }, [history, userInfo])
 
-    const prodcutSeedList = useSelector(state => state.prodcutSeedList)
-    const { loading: loadingSeed, error: errorSeed, productSeeds } = prodcutSeedList
+  // list slice: { productSeeds: [] }
+  const { loading = false, error = null, productSeeds = [] } =
+    useSelector((state) => state.productSeedList || {})
 
-    const prodcutSeedDelete = useSelector(state => state.prodcutSeedDelete)
-    const { success: successSeedDelete, loading: loadingDelete, error: errorDelete } = prodcutSeedDelete
+  // delete slice
+  const {
+    loading: loadingDelete = false,
+    error: errorDelete = null,
+    success: successDelete = false,
+  } = useSelector((state) => state.productSeedDelete || {})
 
-    const seedCreate = useSelector(state => state.seedCreate)
-    const {
-        success: successSeedCreate,
-        loading: loadingCreate,
-        error: errorCreate,
-        product: productCreate
-    } = seedCreate
+  // create slice: seedCreate
+  const {
+    loading: loadingCreate = false,
+    error: errorCreate = null,
+    success: successCreate = false,
+    product: createdProduct,
+  } = useSelector((state) => state.seedCreate || {})
 
-    const userLogin = useSelector(state => state.userLogin)
-    const { userInfo } = userLogin
-
-    useEffect(() => {
-        dispatch({ type: SEED_CREATE_RESET })
-        if (!userInfo.isAdmin && !userInfo) {
-            history.push('/login')
-        } else {
-            if (successSeedCreate) {
-                history.push(`/admin/productlist/seed/${productCreate._id}/edit`)
-            } else {
-                dispatch(listSeedProducts())
-            }
-        }
-    }, [dispatch, history, userInfo, successSeedDelete, successSeedCreate, productCreate])
-
-    const deleteHandler = (id) => {
-        if (window.confirm('Are you sure')) {
-            dispatch(deleteSeedProducts(id))
-        }
+  useEffect(() => {
+    if (successCreate && createdProduct?._id) {
+      dispatch({ type: SEED_CREATE_RESET })
+      history.push(`/admin/productlist/seed/${createdProduct._id}/edit`)
+      return
     }
+    // refresh after delete too
+    dispatch(listSeedProducts())
+  }, [dispatch, history, successCreate, createdProduct, successDelete])
 
-    const createSeedProductHandler = () => {
-        dispatch(createSeedProducts())
+  const createProductHandler = () => {
+    dispatch(createSeedProducts())
+  }
+
+  const deleteHandler = (id) => {
+    if (window.confirm('Are you sure?')) {
+      dispatch(deleteSeedProducts(id))
     }
+  }
 
-    return (
-        <Container>
-            <Row>
-                <Col>
-                    <h1 style={{ marginBottom: '20px' }}>Seeds</h1>
-                </Col>
-                <Col className="text-right">
-                    <Button className='my-3' onClick={createSeedProductHandler}>
-                        <i className='fas fa-plus'></i> Create Product
-                    </Button>
-                </Col>
-            </Row>
-            { loadingCreate && <Loader />}
-            { loadingDelete && <Loader />}
-            { errorCreate && <Message variant='danger'>{errorCreate}</Message>}
-            { errorDelete && <Message variant='danger'>{errorDelete}</Message>}
-            {loadingSeed ? <Loader />
-                : errorSeed ? <Message variant='danger'>{errorSeed}</Message>
-                    : (
-                        <Table style={{ marginBottom: '50px' }} striped bordered hover responsive className='table-sm'>
-                            <thead>
-                                <tr>
-                                    <td>ID</td>
-                                    <td>NAME</td>
-                                    <td>CATEGORY</td>
-                                    <td>PRICE</td>
-                                    <td>EDIT / DELETE</td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {
-                                    productSeeds.map(productSeed => (
-                                        <tr key={productSeed._id}>
-                                            <td>{productSeed._id}</td>
-                                            <td>{productSeed.name}</td>
-                                            <td>{productSeed.category}</td>
-                                            <td>{productSeed.price}</td>
-                                            <td>
-                                                <LinkContainer to={`/admin/productlist/seed/${productSeed._id}/edit`}>
-                                                    <Button variant="light" className="btn btn-sm">
-                                                        <i className="fas fa-edit"></i>
-                                                    </Button>
-                                                </LinkContainer>
-                                                <Button
-                                                    variant="danger"
-                                                    className="btn-sm mr-2"
-                                                    onClick={() => deleteHandler(productSeed._id)}
-                                                >
-                                                    <i className="fas fa-trash-alt"></i>
-                                                </Button>
-                                            </td>
-                                        </tr>
-                                    ))
-                                }
-                            </tbody>
-                        </Table>
-                    )
-            }
-        </Container>
-    )
+  return (
+    <>
+      <Meta title="Seeds | Admin" />
+      <div className="d-flex justify-content-between align-items-center mb-3">
+        <h1 className="m-0">Seeds</h1>
+        <button className="btn btn-primary" onClick={createProductHandler}>
+          <i className="fas fa-plus" /> Create Seed
+        </button>
+      </div>
+
+      {loadingDelete && <Loader />}
+      {errorDelete && <Message variant="danger">{errorDelete}</Message>}
+
+      {loadingCreate && <Loader />}
+      {errorCreate && <Message variant="danger">{errorCreate}</Message>}
+
+      {loading ? (
+        <Loader />
+      ) : error ? (
+        <Message variant="danger">{error}</Message>
+      ) : (
+        <FormContainer>
+          <div className="table-responsive">
+            <table className="table table-sm table-striped align-middle">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>NAME</th>
+                  <th>PRICE</th>
+                  <th>STOCK</th>
+                  <th>CAT</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                {productSeeds.map((p) => (
+                  <tr key={p._id}>
+                    <td>{p._id}</td>
+                    <td>{p.name}</td>
+                    <td>₹{p.price}</td>
+                    <td>{p.countInStock}</td>
+                    <td>{p.category}</td>
+                    <td className="text-nowrap">
+                      <Link
+                        to={`/admin/productlist/seed/${p._id}/edit`}
+                        className="btn btn-light btn-sm"
+                        title="Edit"
+                      >
+                        <i className="fas fa-edit" />
+                      </Link>{' '}
+                      <button
+                        onClick={() => deleteHandler(p._id)}
+                        className="btn btn-danger btn-sm"
+                        title="Delete"
+                      >
+                        <i className="fas fa-trash" />
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </FormContainer>
+      )}
+    </>
+  )
 }
 
 export default SeedList

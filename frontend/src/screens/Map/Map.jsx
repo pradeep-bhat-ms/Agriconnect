@@ -1,18 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Image } from 'react-bootstrap'
-import {
-    GoogleMap,
-    withScriptjs,
-    withGoogleMap,
-    Marker,
-    InfoWindow
-} from 'react-google-maps'
+import { GoogleMap, Marker, InfoWindow, useJsApiLoader } from '@react-google-maps/api';
 import Message from './../../components/Message/Message'
 import Loader from './../../components/Loader/Loader'
 import { listSupplierProductsForAll } from './../../actions/supplierProduct'
 import MapStyles from './MapStyles'
 import Rating from './Rating/Rating'
+import { withScriptjs, withGoogleMap } from "react-google-maps";
+
 
 const Map = () => {
 
@@ -29,7 +25,7 @@ const Map = () => {
 
     return (
         <GoogleMap
-            defaultCenter={{ lat: 6.927079, lng: 79.861244 }}
+            defaultCenter={{ lat: 12.9716, lng: 77.5946}}
             defaultZoom={10}
             defaultOptions={{ styles: MapStyles }}
         >
