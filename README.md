@@ -18,23 +18,23 @@
 
 **AgriConnect** is a full-stack agricultural web application built using the **MERN Stack (MongoDB, Express.js, React.js, Node.js)**.
 
-It is designed to digitally transform agricultural living by connecting:
+It digitally connects:
 
 - 👨‍🌾 Farmers  
 - 🧑‍💼 Sellers  
 - 👨‍👩‍👧 Consumers  
 
-The platform enables seamless product management, online sales, equipment renting, secure digital payments, and modern agricultural service integration.
+The platform enables seamless product management, online sales, equipment renting, secure digital payments, and agricultural service integration.
 
 ---
 
 ## 🚀 Key Features
 
 ### 👨‍🌾 Farmer Module
-- Create & manage farmer profile
+- Manage farmer profile
 - Add, update, and delete grain listings
 - Edit address and personal details
-- Buy seeds/pesticides
+- Buy seeds and pesticides
 - Rent agricultural machinery
 - Apply for agricultural loans & credit services
 
@@ -50,10 +50,10 @@ The platform enables seamless product management, online sales, equipment rentin
 - Add to cart / remove / update quantity
 - Secure checkout via **PayPal Payment Gateway**
 
-### 💬 Additional System Features
-- 🤖 Integrated ChatBot for real-time support
+### 💬 Additional Features
+- 🤖 Integrated ChatBot
 - 🔐 Secure Authentication using JWT
-- 🌐 Fully Responsive UI using React
+- 🌐 Fully Responsive UI with React
 - ⚡ RESTful API using Express & Node.js
 - 📦 MongoDB database integration
 
@@ -61,15 +61,14 @@ The platform enables seamless product management, online sales, equipment rentin
 
 ## 🏗️ Tech Stack
 
-| Layer        | Technology Used |
-|-------------|----------------|
-| Frontend     | React.js |
-| Backend      | Node.js |
-| API Layer    | Express.js |
-| Database     | MongoDB |
-| Authentication | JSON Web Token (JWT) |
-| Payments     | PayPal Gateway |
-| Deployment   | Vercel / Render |
+| Layer | Technology |
+|-------|------------|
+| Frontend | React.js |
+| Backend | Node.js |
+| API | Express.js |
+| Database | MongoDB |
+| Authentication | JWT |
+| Payments | PayPal |
 
 ---
 
@@ -77,19 +76,16 @@ The platform enables seamless product management, online sales, equipment rentin
 
 ```
 Agriconnect/
-│
 ├── backend/
 │   ├── controllers/
 │   ├── models/
 │   ├── routes/
 │   ├── middleware/
-│   ├── config/
 │
 ├── frontend/
 │   ├── components/
 │   ├── screens/
 │   ├── redux/
-│   ├── services/
 │
 ├── .env
 ├── package.json
@@ -100,7 +96,7 @@ Agriconnect/
 
 ## 🔐 Environment Variables Setup
 
-Create a `.env` file in the **root directory**:
+Create a `.env` file in the root directory:
 
 ```
 NODE_ENV=development
@@ -110,7 +106,7 @@ JWT_SECRET=your_secret_key
 PAYPAL_CLIENT_ID=your_paypal_client_id
 ```
 
-Create another `.env` file inside the **frontend folder**:
+Create another `.env` file inside the frontend folder:
 
 ```
 REACT_APP_GOOGLE_KEY=your_google_map_api_key
@@ -138,10 +134,12 @@ npm install
 ### 3️⃣ Run Application
 
 ```bash
-# Run frontend & backend concurrently
 npm run dev
+```
 
-# Run backend only
+Run backend only:
+
+```bash
 npm run server
 ```
 
@@ -159,10 +157,7 @@ npm run build
 ## 🌾 Database Seeding (Optional)
 
 ```bash
-# Import sample data
 npm run data:import
-
-# Destroy all sample data
 npm run data:destroy
 ```
 
@@ -176,7 +171,7 @@ Coming Soon...
 
 ## 🌟 Future Enhancements
 
-- 📊 AI-Based Crop Recommendation System
+- 📊 AI-Based Crop Recommendation
 - 🌦 Weather API Integration
 - 📱 Mobile Application Version
 - 📦 Order Tracking System
@@ -192,9 +187,8 @@ This project is inspired by an open-source MERN e-commerce foundation originally
 AgriConnect extends and customizes the base architecture into a university-level agricultural digital ecosystem with:
 
 - Multi-role architecture (Farmer, Seller, Consumer)
-- Agricultural service integration
-- ChatBot support
-- PayPal payment integration
+- ChatBot integration
+- PayPal payment gateway
 - Enhanced UX/UI customization
 
 ---
