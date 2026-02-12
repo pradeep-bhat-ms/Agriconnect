@@ -1,118 +1,215 @@
-<h1 align="center">Agroic - Reforming Agri Living <br /></h1>  
+<h1 align="center">🌾 AgriConnect – Digitally Transforming Agriculture 🌱</h1>
+
 <p align="center">
-  <img src="https://user-images.githubusercontent.com/49508237/104348350-a5485a80-5527-11eb-854b-b2477bfeb96d.png?" width="500" >
+  <img src="https://github.com/pradeep-bhat-ms/Agriconnect/blob/main/Gemini_Generated_Image_5rk4ux5rk4ux5rk4.png?raw=true" width="500" alt="AgriConnect Logo">
 </p>
 
-## 🌱Agricultural Web Application for University Project Built with Reactjs + Expressjs + Nodejs + MongoDB (MERN)💻
+<p align="center">
+  <img src="https://img.shields.io/badge/Frontend-React-blue" />
+  <img src="https://img.shields.io/badge/Backend-Node.js-green" />
+  <img src="https://img.shields.io/badge/API-Express-black" />
+  <img src="https://img.shields.io/badge/Database-MongoDB-brightgreen" />
+  <img src="https://img.shields.io/badge/License-MIT-yellow" />
+</p>
 
-## Features
+---
 
-- ChatBot
-- Seller Profile
-- Add/Delete Products
-- Edit Profile
-- Add/Edit Personal & Company Address
-- Farmer Profile
-- Add/Delete Grains
-- Edit Profile
-- Add/Edit Address
-- Buy Seeds/Pesticides or Rent Machines
-- Buy Loan & Credit Card
-- Consumer
-- Edit Profile
-- Add/Edit Address
-- Buy Materials From Farmer
-- Payapal Gateway
-- Cart Page
-- Change Quantity
-- Remove Product from Cart Page
-and much more
+## 🌱 About The Project
 
-## Usage
+**AgriConnect** is a full-stack agricultural web application built using the **MERN Stack (MongoDB, Express.js, React.js, Node.js)**.
 
-### ES Modules in Node
+It is designed to digitally transform agricultural living by connecting:
 
-Used ECMAScript Modules in the backend in this project. Be sure to have at least Node v14.6+ or you will need to add the "--experimental-modules" flag.
+- 👨‍🌾 Farmers  
+- 🧑‍💼 Sellers  
+- 👨‍👩‍👧 Consumers  
 
-Also, when importing a file (not a package), be sure to add .js at the end or you will get a "module not found" error
+The platform enables seamless product management, online sales, equipment renting, secure digital payments, and modern agricultural service integration.
 
-You can also install and setup Babel if you would like
+---
 
-### Env Variables
+## 🚀 Key Features
 
-Create a .env file in then root and add the following
+### 👨‍🌾 Farmer Module
+- Create & manage farmer profile
+- Add, update, and delete grain listings
+- Edit address and personal details
+- Buy seeds/pesticides
+- Rent agricultural machinery
+- Apply for agricultural loans & credit services
+
+### 🧑‍💼 Seller Module
+- Seller profile management
+- Add/Delete products
+- Update stock & pricing
+- Manage company information
+
+### 👨‍👩‍👧 Consumer Module
+- Profile & address management
+- Browse and purchase products
+- Add to cart / remove / update quantity
+- Secure checkout via **PayPal Payment Gateway**
+
+### 💬 Additional System Features
+- 🤖 Integrated ChatBot for real-time support
+- 🔐 Secure Authentication using JWT
+- 🌐 Fully Responsive UI using React
+- ⚡ RESTful API using Express & Node.js
+- 📦 MongoDB database integration
+
+---
+
+## 🏗️ Tech Stack
+
+| Layer        | Technology Used |
+|-------------|----------------|
+| Frontend     | React.js |
+| Backend      | Node.js |
+| API Layer    | Express.js |
+| Database     | MongoDB |
+| Authentication | JSON Web Token (JWT) |
+| Payments     | PayPal Gateway |
+| Deployment   | Vercel / Render |
+
+---
+
+## 📂 Project Structure
 
 ```
-NODE_ENV = development
-PORT = 5000
-MONGO_URI = your mongodb uri
-JWT_SECRET = 'abc123'
-PAYPAL_CLIENT_ID = your paypal client id
+Agriconnect/
+│
+├── backend/
+│   ├── controllers/
+│   ├── models/
+│   ├── routes/
+│   ├── middleware/
+│   ├── config/
+│
+├── frontend/
+│   ├── components/
+│   ├── screens/
+│   ├── redux/
+│   ├── services/
+│
+├── .env
+├── package.json
+└── README.md
 ```
-Create a .env file inside frontend and add the following
+
+---
+
+## 🔐 Environment Variables Setup
+
+Create a `.env` file in the **root directory**:
 
 ```
-REACT_APP_GOOGLE_KEY = "add google map api key"
+NODE_ENV=development
+PORT=5000
+MONGO_URI=your_mongodb_uri
+JWT_SECRET=your_secret_key
+PAYPAL_CLIENT_ID=your_paypal_client_id
 ```
 
-### Install Dependencies (frontend & backend)
+Create another `.env` file inside the **frontend folder**:
 
 ```
+REACT_APP_GOOGLE_KEY=your_google_map_api_key
+```
+
+---
+
+## 🧰 Installation & Setup
+
+### 1️⃣ Clone Repository
+
+```bash
+git clone https://github.com/pradeep-bhat-ms/Agriconnect.git
+cd Agriconnect
+```
+
+### 2️⃣ Install Dependencies
+
+```bash
 npm install
 cd frontend
 npm install
 ```
 
-### Run
+### 3️⃣ Run Application
 
-```
-# Run frontend (:3000) & backend (:5000)
+```bash
+# Run frontend & backend concurrently
 npm run dev
 
 # Run backend only
 npm run server
 ```
 
-## Build & Deploy
+---
 
-```
-# Create frontend prod build
+## 🏗️ Build for Production
+
+```bash
 cd frontend
 npm run build
 ```
 
-### Seed Database
+---
 
-You can use the following commands to seed the database with some sample users and products as well as destroy all data
+## 🌾 Database Seeding (Optional)
 
-```
-# Import data
+```bash
+# Import sample data
 npm run data:import
 
-# Destroy data
+# Destroy all sample data
 npm run data:destroy
 ```
 
-## License
+---
 
-The MIT License
+## 🌐 Live Demo
 
-Copyright (c) 2020 Sanjula De Alwis
+Coming Soon...
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+---
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+## 🌟 Future Enhancements
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+- 📊 AI-Based Crop Recommendation System
+- 🌦 Weather API Integration
+- 📱 Mobile Application Version
+- 📦 Order Tracking System
+- 📄 Invoice & PDF Export
+- 📩 SMS / Email Notification System
+
+---
+
+## 🪪 Credits
+
+This project is inspired by an open-source MERN e-commerce foundation originally developed by **Sanjula De Alwis (MIT Licensed)**.
+
+AgriConnect extends and customizes the base architecture into a university-level agricultural digital ecosystem with:
+
+- Multi-role architecture (Farmer, Seller, Consumer)
+- Agricultural service integration
+- ChatBot support
+- PayPal payment integration
+- Enhanced UX/UI customization
+
+---
+
+## 👨‍💻 Author
+
+**Pradeep Bhat M S**  
+MCA (AI & ML) – 2025  
+Full Stack Developer | Agriculture Tech Enthusiast  
+
+GitHub: https://github.com/pradeep-bhat-ms  
+
+---
+
+## ⚖️ License
+
+This project is licensed under the MIT License.  
+See the LICENSE file for details.
